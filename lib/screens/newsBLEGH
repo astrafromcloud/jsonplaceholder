@@ -1,0 +1,188 @@
+import 'package:flutter/material.dart';
+import 'package:rome/theme.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:rome/models/News.dart';
+
+class Todo {
+  final String title;
+  final String description;
+
+  const Todo(this.title, this.description);
+}
+
+void main() {
+  runApp(
+    MaterialApp(
+      title: 'Passing Data',
+      home: TodosScreen(
+        todos: List.generate(
+          20,
+              (i) => Todo(
+            'Доминантсептаккорд $i',
+            'enim adipisci aspernatur nemo\nnumquam omnis facere dolorem dolor ex quis temporibus incidunt\nab delectus culpa quo reprehenderit blanditiis asperiores\naccusantium ut quam in voluptatibus voluptas ipsam dicta',
+          ),
+        ),
+        news: List.generate(
+          20,
+              (i) => News(
+            ),
+        ),
+      ),
+    ),
+  );
+}
+
+class TodosScreen extends StatefulWidget {
+
+  const TodosScreen({Key? key, required this.todos, required this.news}) : super(key: key);
+
+  final List<Todo> todos;
+  final List<News> news;
+
+  @override
+  State<TodosScreen> createState() => _TodosScreenState();
+}
+
+class _TodosScreenState extends State<TodosScreen> {
+  Future<List<News>> fetchUsers() async {
+    var response = await http.get(
+        Uri.parse('https://jsonplaceholder.typicode.com/posts?userId=')
+    );
+
+    if (response.statusCode == 200) {
+      return List<News>.from(
+          json.decode(response.body).map((x) => News.fromJson(x)));
+    } else {
+      throw Exception();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Todos'),
+      ),
+      body: ListView.builder(
+        itemCount: News().userId,
+        itemBuilder: (context, index) {
+          return FutureBuilder(
+            future: fetchUsers(),
+            builder: (BuildContext context, AsyncSnapshot<List<News>> snapshot) {
+              if (snapshot.hasData) {
+                return ListView(
+                  children: [
+                    for (var item in snapshot.data ?? [])
+                      Card(
+                        elevation: 1,
+                        child: ListTile(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                              selectedTileColor: ThemeConfig.widgetColor,
+                              contentPadding: const EdgeInsets.all(16),
+                              selected: true,
+                              title: Container(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                  child: Text(item.title)),
+                              subtitle: Text(
+                                  item.description,
+                              maxLines: 2,
+                              softWrap: true,),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailScreen(todo: widget.todos[index]),
+                                  ),
+                                );
+                              },
+                            ),
+                      ),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          );
+          // return Container(
+          //   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16 ),
+          //   child: ListTile(
+          //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+          //     selectedTileColor: ThemeConfig.widgetColor,
+          //     contentPadding: const EdgeInsets.all(16),
+          //     selected: true,
+          //     title: Container(
+          //       padding: const EdgeInsets.only(bottom: 8),
+          //         child: Text(widget.todos[index].title)),
+          //     subtitle: Text(
+          //         widget.todos[index].description,
+          //     maxLines: 2,
+          //     softWrap: true,),
+          //     onTap: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // );
+        },
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  const DetailScreen({Key? key, required this.todo}) : super(key: key);
+
+  final Todo todo;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(todo.title),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(todo.description),
+      ),
+    );
+  }
+}
+
+
+
+
+// import 'package:flutter/material.dart';
+
+//
+// class NewsListWidget extends StatefulWidget {
+//   const NewsListWidget({Key? key}) : super(key: key);
+//
+//   @override
+//   _NewsListWidgetState createState() => _NewsListWidgetState();
+// }
+//
+// class _NewsListWidgetState extends State<NewsListWidget> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.builder(
+//         itemBuilder: (BuildContext context, int index) {
+//           return GestureDetector(
+//             child: Text(index.toString()),
+//             onTap: () => Scaffold
+//                 .of(context)
+//                 .showSnackBar(SnackBar(content: Text(index.toString()))),
+//           );
+//         },
+//         itemCount: 10);
+//   }
+// }

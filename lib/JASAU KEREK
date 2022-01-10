@@ -1,0 +1,32 @@
+TODO:
+
+5) Check avtomatty turde ozinin ornyna qaityp kelmeitin bolu kerek
+
+7) Kartany tolyqtyru qajet
+
+8) "Show me results" naqty qanwa bar ekenin korsetpeidi(tek 5 dep turady)
+
+12) Albums-te arturli suret bolu kerek
+
+
+DONE:
+
+1) Gallery-ge title jasau kerek (Card-pen wewilu kerek)
+
+3) Gallery suretterine border qoiu kerek
+
+6) UserData dal figmadagydai bolu qajet
+
+2) Comments page-te bodyText qisyq ornalasqan
+
+10) Tek algawqy news-terdin gana comment korinedi
+
+9) FullText-te commentter jogalyp ketedi
+
+11) full_text-te eki comment birdei
+
+4) Gradient tuzuleu kerek, iagni originaldagydai bolu kerek
+
+SURAU KEREK:
+
+1) full_text-te for-loop-ty qalai beruge bolady?
