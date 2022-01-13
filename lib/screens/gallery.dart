@@ -15,7 +15,7 @@ class GalleryWidget extends StatefulWidget {
 }
 
 class _GalleryWidgetState extends State<GalleryWidget> {
-
+  //this is function to get data
   Future<List<Albums>> fetchUsers() async {
     var response = await http.get(Uri.parse(
         'https://jsonplaceholder.typicode.com/albums'
@@ -28,7 +28,7 @@ class _GalleryWidgetState extends State<GalleryWidget> {
       throw Exception();
     }
   }
-
+  //this is build function
   @override
   Widget build(BuildContext context) {
 
@@ -57,6 +57,7 @@ class _GalleryWidgetState extends State<GalleryWidget> {
               mainAxisSpacing: 8,
               crossAxisCount: 2,
               children: <Widget>[
+                //this is for loop
                 for (var item in snapshot.data ?? [])
                   Container(
                     clipBehavior: Clip.hardEdge,
