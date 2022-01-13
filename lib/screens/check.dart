@@ -15,6 +15,8 @@ class CheckPage extends StatefulWidget {
 
 class _CheckPageState extends State<CheckPage> {
 
+  // this function fetch users
+
   Future<List<Checks>> fenchUsers() async{
     var response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/todos'));
 
@@ -26,6 +28,8 @@ class _CheckPageState extends State<CheckPage> {
       throw Exception();
     }
   }
+
+
 
   Color getTextColor(bool isChecked) {
     if (isChecked) {
