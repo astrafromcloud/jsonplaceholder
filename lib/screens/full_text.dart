@@ -9,7 +9,7 @@ import '../main.dart';
 import '../theme.dart';
 import 'comments.dart';
 
-
+//created dev branch
 class FullText extends StatefulWidget {
   const FullText({Key? key, required this.news}) : super(key: key);
 
