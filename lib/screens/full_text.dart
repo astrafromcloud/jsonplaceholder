@@ -150,7 +150,8 @@ class _FullTextState extends State<FullText> {
               return Material(
               color: const Color(0xFF6C63FF),
               child: InkWell(
-                onTap: (){
+                onTap: () {
+                    print(snapshot.data);
                     Navigator.push(context, MaterialPageRoute(builder: (context) {
                       for (var items in snapshot.data ?? []) {
                         return CommentsWidget(comments: items);
@@ -171,7 +172,7 @@ class _FullTextState extends State<FullText> {
                             text: TextSpan(
                                 children: [
                                   TextSpan(text: 'Show me ', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w400, color: Colors.white.withOpacity(0.5), fontSize: 18)),
-                                  const TextSpan(text: '5 results', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600, fontSize: 18))
+                                  TextSpan(text: '${(snapshot.data as List).length} results', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600, fontSize: 18))
                                 ]
                             ),
                           ),
