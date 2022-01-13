@@ -27,6 +27,8 @@ class _CheckPageState extends State<CheckPage> {
     }
   }
 
+  // Hello, world!
+
   Color getTextColor(bool isChecked) {
     if (isChecked) {
       return Colors.white;
