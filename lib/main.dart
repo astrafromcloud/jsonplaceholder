@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:rome/screens/check.dart';
 import 'package:rome/screens/contacts.dart';
 import 'package:rome/screens/gallery.dart';
 import 'package:rome/screens/news.dart';
 import 'package:rome/theme.dart';
 
-void main(){
+import 'models/Checks.dart';
+
+void main() async{
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(ChecksAdapter());
+  await Hive.openBox('checkBox');
+
   runApp(const AppProject());
 }
 
@@ -29,7 +37,6 @@ final pages = [
   const CheckPage(),
   const ContactsWidget(),
 ];
-
 
 class _AppProjectState extends State<AppProject> {
 
