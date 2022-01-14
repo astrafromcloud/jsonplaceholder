@@ -13,7 +13,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(ChecksAdapter());
-  await Hive.openBox('checkBox');
+  await Hive.openBox<Checks>('checkBox');
 
   runApp(const AppProject());
 }
