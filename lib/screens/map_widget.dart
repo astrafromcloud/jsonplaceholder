@@ -15,19 +15,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    controller = MapController(
+      location: LatLng(double.parse(widget.lat), double.parse(widget.lng)),
+      tileSize: 512
+    );
+  }
 
-  // late String lat;
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   lat = widget.lat;
-  // }
-
-  final controller = MapController(
-    location: LatLng(43.263701, 76.964606),
-    tileSize: 512
-  );
+  late MapController controller;
 
   Widget _buildMarkerWidget(Offset pos, Color color) {
     return Positioned(
