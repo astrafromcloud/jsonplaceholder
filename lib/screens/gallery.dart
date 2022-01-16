@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:rome/models/Albums.dart';
 import 'dart:convert';
@@ -9,30 +10,37 @@ import 'image_viewer.dart';
 
 class GalleryWidget extends StatefulWidget {
   const GalleryWidget({Key? key}) : super(key: key);
-//test
+
   @override
   _GalleryWidgetState createState() => _GalleryWidgetState();
 }
 
 class _GalleryWidgetState extends State<GalleryWidget> {
-  //this is function to get data
+  late final Box box;
+
   Future<List<Albums>> fetchUsers() async {
-    var response = await http.get(Uri.parse(
-        'https://jsonplaceholder.typicode.com/albums'
-    ));
+    if (box.isNotEmpty) {
+      return List<Albums>.from(box.values.map((e) => e as Albums));
+    }
+    var response = await http
+        .get(Uri.parse('https://jsonplaceholder.typicode.com/albums'));
 
     if (response.statusCode == 200) {
-      return List<Albums>
-          .from(jsonDecode(response.body).map((x) => Albums.fromJson(x)));
+      return List<Albums>.from(
+          jsonDecode(response.body).map((x) => Albums.fromJson(x)));
     } else {
       throw Exception();
     }
   }
-  //this is build function
+
+  @override
+  void initState() {
+    box = Hive.box<Albums>('albumsBox');
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-
-
     // Future<List> getUrls() async
     // {
     //   Future<List> urls = getUrls();
@@ -50,51 +58,58 @@ class _GalleryWidgetState extends State<GalleryWidget> {
         builder: (BuildContext context, AsyncSnapshot<List<Albums>> snapshot) {
           if (snapshot.hasData) {
             var i = 200;
-            return GridView.count(
+            return GridView.builder(
+              itemCount: (snapshot.data as List).length,
               primary: true,
               padding: const EdgeInsets.all(16),
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-              crossAxisCount: 2,
-              children: <Widget>[
-                //this is for loop
-                for (var item in snapshot.data ?? [])
-                  Container(
-                    clipBehavior: Clip.hardEdge,
-                    decoration: ShapeDecoration(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                    child: Stack(
-                      children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PhotosWidget(
-                                    albums: item,
-                                  ),
-                                ),
-                              );
-                              i++;
-                            },
-                          child: Image(image: NetworkImage("https://placekitten.com/$i/$i"),
-                        ),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                crossAxisCount: 2,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                Albums item = (snapshot.data as List)[index];
+                if (box.containsKey(item.id) == false) {
+                  box.put(item.id, item);
+                }
+                return Container(
+                  clipBehavior: Clip.hardEdge,
+                  decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
+                  child: Stack(children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PhotosWidget(
+                              albums: box.get(item.id),
+                            ),
+                          ),
+                        );
+                        i++;
+                      },
+                      child: Image(
+                        image: NetworkImage("https://placekitten.com/$i/$i"),
                       ),
-                        Container(
-                            padding: const EdgeInsets.fromLTRB(24, 0, 12, 12),
-                            alignment: Alignment.bottomCenter,
-                            child: Text(
-                              item.title.toString(),
-                              maxLines: 2,
-                              softWrap: true,
-                              style: const TextStyle(
-                                  fontSize: 14, fontFamily: 'Raleway', fontWeight: FontWeight.w500, color: Colors.white
-                              ),
-                            )
-                        )
-                      ]
                     ),
-                  ),
-              ],
+                    Container(
+                        padding: const EdgeInsets.fromLTRB(24, 0, 12, 12),
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          box.get(item.id).title.toString(),
+                          maxLines: 2,
+                          softWrap: true,
+                          style: const TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white),
+                        ))
+                  ]),
+                );
+              },
             );
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());

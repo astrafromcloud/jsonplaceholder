@@ -1,14 +1,26 @@
+import 'package:hive/hive.dart';
 import 'package:rome/models/Address.dart';
 import 'package:rome/models/Company.dart';
 
-class User {
+part 'User.g.dart';
+
+@HiveType(typeId: 8)
+class User extends HiveObject{
+  @HiveField(0)
   int id;
+  @HiveField(1)
   String name;
+  @HiveField(2)
   String username;
+  @HiveField(3)
   String email;
+  @HiveField(4)
   Address address;
+  @HiveField(5)
   String phone;
+  @HiveField(6)
   String website;
+  @HiveField(7)
   Company company;
 
   User({

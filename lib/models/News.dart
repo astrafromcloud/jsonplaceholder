@@ -1,7 +1,16 @@
-class News {
+import 'package:hive/hive.dart';
+
+part 'News.g.dart';
+
+@HiveType(typeId: 6)
+class News extends HiveObject{
+  @HiveField(0)
   int userId;
+  @HiveField(1)
   int id;
+  @HiveField(2)
   String title;
+  @HiveField(3)
   String body;
 
   News({

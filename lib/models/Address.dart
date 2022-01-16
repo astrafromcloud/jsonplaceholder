@@ -1,10 +1,19 @@
+import 'package:hive/hive.dart';
 import 'package:rome/models/Geo.dart';
 
-class Address {
+part 'Address.g.dart';
+
+@HiveType(typeId: 1)
+class Address extends HiveObject {
+  @HiveField(0)
   String street;
+  @HiveField(1)
   String suite;
+  @HiveField(2)
   String city;
+  @HiveField(3)
   String zipcode;
+  @HiveField(4)
   Geo geo;
 
   Address({
